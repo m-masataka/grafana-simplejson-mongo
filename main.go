@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/grafana-plugin-mongodb/api"
+	"github.com/grafana-simplejson-mongo/api"
 )
 
 func main() {
