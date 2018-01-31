@@ -8,21 +8,22 @@ import (
 )
 
 type Config struct {
-	Port int
-	Host string
+	Port      int
+	Host      string
+	MongoHost string
 }
 
-func httpServer() http.Handler {
+func httpServer(conf Config) http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/", checkRequest)
 	r.HandleFunc("/search", reqSearch)
-	r.HandleFunc("/query", reqQuery)
+	r.HandleFunc("/query", conf.reqQuery)
 	return r
 }
 
-func StartHTTPServer(config Config, errChan chan error) {
+func StartHTTPServer(conf Config, errChan chan error) {
 	go func() {
-		p := fmt.Sprintf(":%d", config.Port)
-		errChan <- http.ListenAndServe(p, httpServer())
+		p := fmt.Sprintf(":%d", conf.Port)
+		errChan <- http.ListenAndServe(p, httpServer(conf))
 	}()
 }

@@ -8,16 +8,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-const (
-	host = "localhost"
-	port = 27017
-)
-
 type SessionProvider struct {
 	Session *mgo.Session
 }
 
-func NewSession() SessionProvider {
+func NewSession(host string) SessionProvider {
 	var sp SessionProvider
 	session, err := mgo.Dial("mongodb://" + host)
 	if err != nil {

@@ -28,12 +28,12 @@ func reqSearch(w http.ResponseWriter, r *http.Request) {
 	w.Write(bytes)
 }
 
-func reqQuery(w http.ResponseWriter, r *http.Request) {
+func (conf *Config) reqQuery(w http.ResponseWriter, r *http.Request) {
 	var result TimeSeriesQuery
 	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	sp := mongodb.NewSession()
+	sp := mongodb.NewSession(conf.MongoHost)
 	var resp []TimeSeriesResponse
 	for i, v := range result.Targets {
 		var err error
