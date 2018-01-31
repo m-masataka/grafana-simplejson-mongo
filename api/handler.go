@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/grafana-simplejson-mongo/mongodb"
+	"github.com/m-masataka/grafana-simplejson-mongo/mongodb"
 )
 
 func checkRequest(w http.ResponseWriter, r *http.Request) {
