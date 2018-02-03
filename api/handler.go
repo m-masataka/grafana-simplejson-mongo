@@ -42,7 +42,7 @@ func (conf *Config) reqQuery(w http.ResponseWriter, r *http.Request) {
 	q.Interval = result.Interval
 	var resbytes []byte
 	resbytes = append(resbytes, []byte("[")...)
-	for i, v := range result.Targets {
+	for _, v := range result.Targets {
 		q.Type = v.Type
 		err := q.parseTarget(v.Target)
 		if err != nil {
