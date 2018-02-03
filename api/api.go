@@ -9,7 +9,6 @@ import (
 
 type Config struct {
 	Port      int
-	Host      string
 	MongoHost string
 }
 
