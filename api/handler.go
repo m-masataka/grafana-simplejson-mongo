@@ -43,7 +43,6 @@ func (conf *Config) reqQuery(w http.ResponseWriter, r *http.Request) {
 	var resbytes []byte
 	resbytes = append(resbytes, []byte("[")...)
 	for i, v := range result.Targets {
-		log.Println(i)
 		q.Type = v.Type
 		err := q.parseTarget(v.Target)
 		if err != nil {
