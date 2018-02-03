@@ -33,3 +33,14 @@ type TimeSeriesResponse struct {
 type SearchRequest struct {
 	Target string `json:"target"`
 }
+
+type TableResponse struct {
+	Columns []TableColumn `json:"columns"`
+	Rows    [][]string    `json:"rows"`
+	Type    string        `json:"type"`
+}
+
+type TableColumn struct {
+	Text string `json:"text"`
+	Type string `json:"type"`
+}

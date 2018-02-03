@@ -16,7 +16,7 @@ type Config struct {
 func httpServer(conf Config) http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/", checkRequest)
-	r.HandleFunc("/search", reqSearch)
+	r.HandleFunc("/search", conf.reqSearch)
 	r.HandleFunc("/query", conf.reqQuery)
 	return r
 }
