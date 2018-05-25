@@ -4,6 +4,7 @@ import (
 	"log"
 	"strconv"
 	"time"
+	"fmt"
 
 	"gopkg.in/mgo.v2/bson"
 )
@@ -31,6 +32,7 @@ func (sp *SessionProvider) GetTableData(dbname string, collection string, timeco
 		log.Println(err)
 		return keys, rows, err
 	}
+	log.Println(results)
 	if len(results) < 1 {
 		return keys, rows, nil
 	}
@@ -76,6 +78,8 @@ func convertString(v interface{}) string {
 		ret = v.(bson.ObjectId).String()
 	case string:
 		ret = v.(string)
+	case float64:
+		ret = fmt.Sprintf("%f", v.(float64))
 	}
 	return ret
 }

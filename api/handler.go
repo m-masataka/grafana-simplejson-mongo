@@ -18,7 +18,7 @@ type TSQuery struct {
 	TimeCol    string
 	From       time.Time
 	To         time.Time
-	Interval   string
+	IntervalMs int
 	Type       string
 }
 
@@ -39,7 +39,7 @@ func (conf *Config) reqQuery(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	q.Interval = result.Interval
+	q.IntervalMs = result.IntervalMs
 	var resbytes []byte
 	resbytes = append(resbytes, []byte("[")...)
 	for _, v := range result.Targets {
@@ -72,7 +72,7 @@ func (conf *Config) reqQuery(w http.ResponseWriter, r *http.Request) {
 			resbytes = append(resbytes, []byte(",")...)
 		} else if q.Type == "timeserie" {
 			resp := TimeSeriesResponse{Target: v.Target}
-			resp.DataPoint, err = sp.GetTimeSeriesData(q.DB, q.Collection, q.Col, q.TimeCol, q.From, q.To, q.Interval)
+			resp.DataPoint, err = sp.GetTimeSeriesData(q.DB, q.Collection, q.Col, q.TimeCol, q.From, q.To, q.IntervalMs)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return

@@ -48,7 +48,7 @@ Select ``timeseries`` Query, and edit Target.
 Example
 
 ```
-fluentd.memory.memory.time
+fluentd.memory.{memory, time}
 ```
 
 #### Table Query

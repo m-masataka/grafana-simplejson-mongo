@@ -5,13 +5,13 @@ import (
 	"strings"
 )
 
-var TimeSeriesColumn = regexp.MustCompile(`data{.+?}`)
+var TimeSeriesColumn = regexp.MustCompile(`{.+?}`)
 
 func TimeSeriesColumnRegexp(str string) []string {
 	var ret []string
 	data := TimeSeriesColumn.FindString(str)
 	data = strings.TrimRight(data, "}")
-	data = strings.TrimLeft(data, "data{")
+	data = strings.TrimLeft(data, "{")
 	ret = strings.Split(data, ",")
 	return ret
 }

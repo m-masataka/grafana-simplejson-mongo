@@ -43,6 +43,7 @@ var (
 
 func parseDate(v bson.M, num int) (time.Time, error) {
 	var year, month, day, hour, minute, second, milisec int
+	log.Println(v)
 	for i := 0; i <= num; i++ {
 		switch i {
 		case 0:
