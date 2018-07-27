@@ -16,6 +16,8 @@ type TSQuery struct {
 	Collection string
 	Col        string
 	TimeCol    string
+	MatchField string
+	MatchValue string
 	From       time.Time
 	To         time.Time
 	IntervalMs int
@@ -72,7 +74,7 @@ func (conf *Config) reqQuery(w http.ResponseWriter, r *http.Request) {
 			resbytes = append(resbytes, []byte(",")...)
 		} else if q.Type == "timeserie" {
 			resp := TimeSeriesResponse{Target: v.Target}
-			resp.DataPoint, err = sp.GetTimeSeriesData(q.DB, q.Collection, q.Col, q.TimeCol, q.From, q.To, q.IntervalMs)
+			resp.DataPoint, err = sp.GetTimeSeriesData(q.DB, q.Collection, q.Col, q.TimeCol, q.MatchField, q.MatchValue, q.From, q.To, q.IntervalMs)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
@@ -108,6 +110,10 @@ func (q *TSQuery) parseTarget(target string) error {
 		columns := TimeSeriesColumnRegexp(res[2])
 		q.Col = columns[0]
 		q.TimeCol = columns[1]
+		if len(columns) > 2 {
+			q.MatchField = columns[2]
+			q.MatchValue = columns[3]
+		}
 	}
 	return nil
 }

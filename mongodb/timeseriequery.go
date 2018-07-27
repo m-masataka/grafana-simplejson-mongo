@@ -9,7 +9,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func (sp *SessionProvider) GetTimeSeriesData(dbname string, collection string, col string, timecol string, from time.Time, to time.Time, intervalMs int) ([][]float64, error) {
+func (sp *SessionProvider) GetTimeSeriesData(dbname string, collection string, col string, timecol string, matchfield string, matchvalue string, from time.Time, to time.Time, intervalMs int) ([][]float64, error) {
 	var res [][]float64
 	c := sp.Session.DB(dbname).C(collection)
 	var results []bson.M
@@ -19,7 +19,7 @@ func (sp *SessionProvider) GetTimeSeriesData(dbname string, collection string, c
 		return res, err
 	}
 	timecolType := reflect.TypeOf(judge[timecol]).Kind()
-	pipeline := BuildTimeSeriesPipe(col, timecol, from, to, intervalMs, timecolType)
+	pipeline := BuildTimeSeriesPipe(col, timecol, matchfield, matchvalue, from, to, intervalMs, timecolType)
 	err = c.Pipe(pipeline).All(&results)
 	if err != nil {
 		return res, err
@@ -50,8 +50,8 @@ func (sp *SessionProvider) GetTimeSeriesData(dbname string, collection string, c
 }
 
 
-func BuildTimeSeriesPipe(col string, timecol string, from time.Time, to time.Time, intervalMs int, timecolType reflect.Kind) ([]bson.M) {
-	var trange bson.M
+func BuildTimeSeriesPipe(col string, timecol string, matchfield string, matchvalue string, from time.Time, to time.Time, intervalMs int, timecolType reflect.Kind) ([]bson.M) {
+	var trange, fieldMatch bson.M
 	switch timecolType {
 	case reflect.String:
 		trange = bson.M{ timecol: bson.M{"$gte": from.Format("20060102150405"), "$lte": to.Format("20060102150405")}}
@@ -62,8 +62,15 @@ func BuildTimeSeriesPipe(col string, timecol string, from time.Time, to time.Tim
 	default:
 		trange = bson.M{ timecol: bson.M{"$gte": from, "$lte": to}}
 	}
+
+	if matchfield != "" && matchvalue != "" {
+		fieldMatch = bson.M{matchfield: matchvalue}
+	} else {
+		fieldMatch = bson.M{}
+	}
+
 	pipeline := []bson.M{
-		{ "$match": trange },
+		{ "$match": bson.M{ "$and": []interface{}{trange, fieldMatch}} },
 		{
 			"$group": bson.M{
 				"_id": buildTimeBson(timecol, intervalMs, timecolType) ,
