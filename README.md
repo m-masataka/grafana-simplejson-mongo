@@ -48,8 +48,20 @@ Select ``timeseries`` Query, and edit Target.
 Example
 
 ```
-fluentd.memory.{memory, time}
+fluentd.memory.{memory,time}
 ```
+
+
+You can also add a match query on a field
+```
+[Database name].[Collection name].{[value column(Y-axis) name],[time column(X-axis) name],[field name],[value to match]}
+```
+Example
+
+```
+fluentd.memory.{memory,time,server,JP}
+```
+
 
 #### Table Query
 Select ``table`` Query, and edit Target.
